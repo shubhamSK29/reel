@@ -19,7 +19,7 @@ body {
 
 /* Reel Container */
 .reels-container {
-    width: 400px;
+    width: 305px;
     height: 90vh;
     overflow-y: auto;
     /* Keeps scrolling enabled but hidden */
