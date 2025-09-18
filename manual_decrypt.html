@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Decryption - Fractured Keys</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="nav">
+                <a href="/" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+            <div class="logo">
+                <i class="fas fa-tools"></i>
+                <h1>Manual Decryption</h1>
+            </div>
+            <p class="subtitle">Decrypt from binary files or base64 data</p>
+        </header>
+
+        <main class="main-content">
+            <div class="manual-decrypt-container">
+                <div class="method-selector">
+                    <h3><i class="fas fa-cog"></i> Decryption Method</h3>
+                    <div class="method-tabs">
+                        <button class="method-tab active" onclick="switchMethod('file')" data-method="file">
+                            <i class="fas fa-file-code"></i>
+                            Binary File
+                        </button>
+                        <button class="method-tab" onclick="switchMethod('base64')" data-method="base64">
+                            <i class="fas fa-code"></i>
+                            Base64 Data
+                        </button>
+                    </div>
+                </div>
+
+                <form id="manualDecryptForm" class="manual-decrypt-form">
+                    <div class="form-section">
+                        <h3><i class="fas fa-key"></i> Master Password</h3>
+                        
+                        <div class="form-group">
+                            <label for="master_password">Enter your master password:</label>
+                            <div class="password-input">
+                                <input type="password" id="master_password" name="master_password" required>
+                                <button type="button" class="toggle-password" onclick="togglePassword('master_password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <small>This is the same master password you used during encryption</small>
+                        </div>
+                    </div>
+
+                    <!-- Binary File Method -->
+                    <div id="fileMethod" class="method-content active">
+                        <div class="form-section">
+                            <h3><i class="fas fa-file-code"></i> Binary File</h3>
+                            <p>Upload a .bin file containing encrypted password data:</p>
+                            
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <input type="file" id="binary_file" name="binary_file" accept=".bin">
+                                <div class="upload-placeholder">
+                                    <i class="fas fa-file-upload"></i>
+                                    <p>Click to select binary file or drag and drop</p>
+                                    <small>Upload a .bin file containing encrypted data</small>
+                                </div>
+                            </div>
+
+                            <div id="fileInfo" class="file-info" style="display: none;">
+                                <div class="file-details">
+                                    <i class="fas fa-file"></i>
+                                    <div>
+                                        <div class="file-name"></div>
+                                        <div class="file-size"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Base64 Method -->
+                    <div id="base64Method" class="method-content">
+                        <div class="form-section">
+                            <h3><i class="fas fa-code"></i> Base64 Data</h3>
+                            <p>Paste base64-encoded encrypted password data:</p>
+                            
+                            <div class="form-group">
+                                <label for="base64_data">Base64 Data:</label>
+                                <textarea id="base64_data" name="base64_data" rows="8" 
+                                         placeholder="Paste your base64-encoded encrypted data here..."></textarea>
+                                <small>This should be the base64 representation of your encrypted password data</small>
+                            </div>
+
+                            <div class="base64-actions">
+                                <button type="button" onclick="validateBase64()" class="btn btn-tertiary">
+                                    <i class="fas fa-check"></i>
+                                    Validate Base64
+                                </button>
+                                <button type="button" onclick="clearBase64()" class="btn btn-tertiary">
+                                    <i class="fas fa-eraser"></i>
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="decrypt_type" name="decrypt_type" value="file">
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fas fa-unlock"></i>
+                            Decrypt Password
+                        </button>
+                    </div>
+                </form>
+
+                <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                    <div class="loading-content">
+                        <div class="spinner"></div>
+                        <h3>Processing...</h3>
+                        <p>Decrypting password data</p>
+                    </div>
+                </div>
+
+                <div id="resultSection" class="result-section" style="display: none;">
+                    <h3><i class="fas fa-check-circle"></i> Decryption Complete!</h3>
+                    <p>Your password has been successfully recovered.</p>
+                    
+                    <div class="password-result">
+                        <label>Recovered Password:</label>
+                        <div class="password-display">
+                            <input type="password" id="recoveredPassword" readonly>
+                            <button type="button" class="toggle-password" onclick="togglePassword('recoveredPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button type="button" class="copy-password" onclick="copyPassword()" title="Copy to clipboard">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="result-actions">
+                        <button onclick="startNewDecryption()" class="btn btn-secondary">
+                            <i class="fas fa-plus"></i>
+                            Decrypt Another Password
+                        </button>
+                        <button onclick="clearPassword()" class="btn btn-tertiary">
+                            <i class="fas fa-eraser"></i>
+                            Clear Password
+                        </button>
+                    </div>
+
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Security Note:</strong> Make sure to copy your password to a secure location 
+                        and clear it from this page when done.
+                    </div>
+                </div>
+
+                <div id="errorSection" class="error-section" style="display: none;">
+                    <h3><i class="fas fa-exclamation-circle"></i> Decryption Failed</h3>
+                    <p id="errorMessage"></p>
+                    
+                    <div class="error-actions">
+                        <button onclick="startNewDecryption()" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i>
+                            Try Again
+                        </button>
+                    </div>
+
+                    <div class="troubleshooting">
+                        <h4>Troubleshooting Tips:</h4>
+                        <ul>
+                            <li>Verify that you're using the correct master password</li>
+                            <li>Ensure the binary file or base64 data is valid and uncorrupted</li>
+                            <li>Check that the data format matches what was originally encrypted</li>
+                            <li>For base64 data, make sure there are no extra spaces or line breaks</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-card">
+                        <h4><i class="fas fa-info-circle"></i> About Manual Decryption</h4>
+                        <p>Manual decryption is used for legacy compatibility or when you have encrypted data 
+                           that was saved as binary files or base64 strings instead of being embedded in images.</p>
+                        
+                        <div class="format-info">
+                            <h5>Supported Formats:</h5>
+                            <ul>
+                                <li><strong>Binary Files (.bin):</strong> Raw encrypted data saved to disk</li>
+                                <li><strong>Base64 Strings:</strong> Text representation of encrypted binary data</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/manual_decrypt.js') }}"></script>
+</body>
+</html>

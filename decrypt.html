@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decrypt Password - Fractured Keys</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="nav">
+                <a href="/" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+            <div class="logo">
+                <i class="fas fa-unlock"></i>
+                <h1>Decrypt Password</h1>
+            </div>
+            <p class="subtitle">Recover your password from steganographic images</p>
+        </header>
+
+        <main class="main-content">
+            <div class="decrypt-container">
+                <form id="decryptForm" class="decrypt-form">
+                    <div class="form-section">
+                        <h3><i class="fas fa-key"></i> Master Password</h3>
+                        
+                        <div class="form-group">
+                            <label for="master_password">Enter your master password:</label>
+                            <div class="password-input">
+                                <input type="password" id="master_password" name="master_password" required>
+                                <button type="button" class="toggle-password" onclick="togglePassword('master_password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <small>This is the same master password you used during encryption</small>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-images"></i> Steganographic Images</h3>
+                        <p>Upload the images containing your hidden password shares:</p>
+                        
+                        <div class="file-upload-area" id="imageUploadArea">
+                            <input type="file" id="stego_images" name="stego_images" multiple accept="image/*" required>
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click to select images or drag and drop</p>
+                                <small>Upload your steganographic images (PNG, JPG, GIF, BMP, TIFF)</small>
+                            </div>
+                        </div>
+
+                        <div id="imagePreview" class="image-preview"></div>
+                        
+                        <div class="info-box">
+                            <i class="fas fa-info-circle"></i>
+                            <p>You only need to upload the minimum threshold number of images to recover your password. 
+                               For example, if your threshold was 2, you only need 2 out of 3 images.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fas fa-unlock"></i>
+                            Decrypt Password
+                        </button>
+                    </div>
+                </form>
+
+                <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                    <div class="loading-content">
+                        <div class="spinner"></div>
+                        <h3>Processing...</h3>
+                        <p>Extracting shares and reconstructing password</p>
+                    </div>
+                </div>
+
+                <div id="resultSection" class="result-section" style="display: none;">
+                    <h3><i class="fas fa-check-circle"></i> Decryption Complete!</h3>
+                    <p>Your password has been successfully recovered.</p>
+                    
+                    <div class="password-result">
+                        <label>Recovered Password:</label>
+                        <div class="password-display">
+                            <input type="password" id="recoveredPassword" readonly>
+                            <button type="button" class="toggle-password" onclick="togglePassword('recoveredPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button type="button" class="copy-password" onclick="copyPassword()" title="Copy to clipboard">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="result-actions">
+                        <button onclick="startNewDecryption()" class="btn btn-secondary">
+                            <i class="fas fa-plus"></i>
+                            Decrypt Another Password
+                        </button>
+                        <button onclick="clearPassword()" class="btn btn-tertiary">
+                            <i class="fas fa-eraser"></i>
+                            Clear Password
+                        </button>
+                    </div>
+
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Security Note:</strong> Make sure to copy your password to a secure location 
+                        and clear it from this page when done.
+                    </div>
+                </div>
+
+                <div id="errorSection" class="error-section" style="display: none;">
+                    <h3><i class="fas fa-exclamation-circle"></i> Decryption Failed</h3>
+                    <p id="errorMessage"></p>
+                    
+                    <div class="error-actions">
+                        <button onclick="startNewDecryption()" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i>
+                            Try Again
+                        </button>
+                    </div>
+
+                    <div class="troubleshooting">
+                        <h4>Troubleshooting Tips:</h4>
+                        <ul>
+                            <li>Verify that you're using the correct master password</li>
+                            <li>Ensure you've uploaded the correct steganographic images</li>
+                            <li>Check that you have enough images (at least the threshold number)</li>
+                            <li>Make sure the images haven't been modified or compressed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/decrypt.js') }}"></script>
+</body>
+</html>

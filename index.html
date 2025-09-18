@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractured Keys - Steganographic Password Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-key"></i>
+                <h1>Fractured Keys</h1>
+            </div>
+            <p class="subtitle">Steganographic Password Manager</p>
+            <p class="description">
+                Secure credential storage using distributed steganography and Shamir's Secret Sharing.
+                Your passwords are encrypted, split into shares, and hidden in images.
+            </p>
+        </header>
+
+        <main class="main-content">
+            <div class="feature-grid">
+                <div class="feature-card encrypt-card">
+                    <div class="card-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h2>Encrypt Password</h2>
+                    <p>Encrypt a password and embed the shares into multiple images using steganography</p>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>AES-GCM Encryption</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-puzzle-piece"></i>
+                            <span>Shamir's Secret Sharing</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-image"></i>
+                            <span>Steganographic Hiding</span>
+                        </div>
+                    </div>
+                    <a href="/encrypt" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i>
+                        Start Encryption
+                    </a>
+                </div>
+
+                <div class="feature-card decrypt-card">
+                    <div class="card-icon">
+                        <i class="fas fa-unlock"></i>
+                    </div>
+                    <h2>Decrypt Password</h2>
+                    <p>Recover your password from steganographic images containing the encrypted shares</p>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-search"></i>
+                            <span>Extract Hidden Data</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-puzzle-piece"></i>
+                            <span>Reconstruct Shares</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-key"></i>
+                            <span>Decrypt Password</span>
+                        </div>
+                    </div>
+                    <a href="/decrypt" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right"></i>
+                        Start Decryption
+                    </a>
+                </div>
+
+                <div class="feature-card manual-card">
+                    <div class="card-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h2>Manual Decryption</h2>
+                    <p>Decrypt from binary files or base64 data for legacy compatibility</p>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-file-code"></i>
+                            <span>Binary Files</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-code"></i>
+                            <span>Base64 Data</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-backward"></i>
+                            <span>Legacy Support</span>
+                        </div>
+                    </div>
+                    <a href="/manual_decrypt" class="btn btn-tertiary">
+                        <i class="fas fa-arrow-right"></i>
+                        Manual Mode
+                    </a>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> How It Works</h3>
+                    <div class="info-content">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Encrypt</h4>
+                                <p>Your password is encrypted with AES-GCM using your master password</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Split</h4>
+                                <p>The encrypted data is split into multiple shares using Shamir's Secret Sharing</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Hide</h4>
+                                <p>Each share is embedded into a different image using steganography</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Recover</h4>
+                                <p>Use any threshold number of images to reconstruct and decrypt your password</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="security-info">
+                    <h3><i class="fas fa-shield-alt"></i> Security Features</h3>
+                    <ul>
+                        <li><strong>No Single Point of Failure:</strong> Password is distributed across multiple images</li>
+                        <li><strong>Threshold Security:</strong> Only need a subset of images to recover (e.g., 2 out of 3)</li>
+                        <li><strong>Steganographic Concealment:</strong> Hidden data is invisible to casual inspection</li>
+                        <li><strong>Layered Encryption:</strong> Multiple cryptographic primitives for enhanced security</li>
+                        <li><strong>Offline Operation:</strong> No reliance on online services or cloud storage</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Fractured Keys - Experimental Steganographic Password Manager</p>
+            <p>For educational and research purposes</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
